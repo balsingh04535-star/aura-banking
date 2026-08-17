@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Share2,
   Repeat,
-  Check,
 } from 'lucide-react';
 import { BiometricModal } from '../common/BiometricModal';
 import { ProcessingOrb } from '../common/ProcessingOrb';
@@ -34,7 +33,7 @@ export const SendMoneyModal: React.FC = () => {
     showToast,
   } = useBanking();
 
-  const [step, setStep] = useState<Step>('recipient');
+  const [step, setStep] = useState<Step>('amount');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipient, setSelectedRecipient] = useState<Beneficiary | null>(null);
   const [amountStr, setAmountStr] = useState<string>('0');
@@ -50,7 +49,6 @@ export const SendMoneyModal: React.FC = () => {
   const [customName, setCustomName] = useState('');
   const [customIban, setCustomIban] = useState('');
 
-  // Default to a default recipient if opened without prefill
   useEffect(() => {
     if (isSendModalOpen) {
       if (prefilledRecipient) {
@@ -192,69 +190,74 @@ export const SendMoneyModal: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-50 bg-[#000000] text-white flex flex-col justify-between p-4 sm:p-5 overflow-y-auto select-none font-sans"
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-50 bg-black text-white flex flex-col justify-between px-5 pt-3 pb-8 max-w-md mx-auto h-[100dvh] overflow-hidden select-none font-sans"
         >
-          {/* TOP HEADER BAR (Exact to reference) */}
-          <div className="flex items-center justify-between w-full max-w-sm mx-auto pt-1 pb-2">
+          {/* 1. TOP HEADER (Exact to reference) */}
+          <div className="flex items-center justify-between w-full pt-1 pb-1 shrink-0">
             <button
               onClick={() => {
                 triggerHaptic('light');
-                if (step === 'amount') {
-                  setStep('recipient');
+                if (step === 'recipient') {
+                  setStep('amount');
                 } else if (step === 'review') {
                   setStep('amount');
                 } else {
                   handleClose();
                 }
               }}
-              className="w-10 h-10 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center hover:bg-[#2c2c2e] transition-colors"
+              className="w-10 h-10 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center active:bg-[#2c2c2e] transition-colors"
             >
               <ArrowLeft size={18} />
             </button>
 
-            {/* Recipient Name & IBAN in Center */}
+            {/* Recipient Name & IBAN */}
             <div
               onClick={() => {
                 triggerHaptic('light');
                 setStep('recipient');
               }}
-              className="text-center cursor-pointer group"
+              className="text-center cursor-pointer active:opacity-75 transition-opacity px-2"
             >
-              <h2 className="text-sm font-bold tracking-wide text-white uppercase truncate max-w-[200px]">
+              <h2 className="text-sm font-bold tracking-wide text-white uppercase truncate max-w-[210px]">
                 {selectedRecipient?.name || 'BALVINDER SINGH'}
               </h2>
-              <p className="text-[11px] text-[#8e8e93] font-mono tracking-tight truncate max-w-[200px]">
+              <p className="text-[11px] text-[#8e8e93] font-mono tracking-tight truncate max-w-[210px]">
                 {selectedRecipient?.iban || 'BE37 9676 3046 7428'}
               </p>
             </div>
 
             {/* Recipient Avatar Circle with Blue Mini Badge */}
-            <div className="relative">
+            <div
+              onClick={() => {
+                triggerHaptic('light');
+                setStep('recipient');
+              }}
+              className="relative cursor-pointer"
+            >
               <div className="w-10 h-10 rounded-full bg-[#8370ff] text-white font-bold text-xs flex items-center justify-center shadow-sm">
                 {recipientInitials}
               </div>
-              {/* Cyan mini badge in corner */}
-              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00d2ff] border-2 border-[#000000] flex items-center justify-center">
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00d2ff] border-2 border-black flex items-center justify-center">
                 <span className="text-[7px] font-extrabold text-black">Σ</span>
               </div>
             </div>
           </div>
 
-          {/* MAIN BODY FLOW */}
-          <div className="flex-1 w-full max-w-sm mx-auto flex flex-col justify-between py-1">
+          {/* 2. MAIN WORKSPACE */}
+          <div className="flex-1 flex flex-col justify-between w-full min-h-0 overflow-hidden py-1">
             <AnimatePresence mode="wait">
-              {/* STEP 1: RECIPIENT PICKER */}
+              {/* RECIPIENT SELECTOR VIEW */}
               {step === 'recipient' && (
                 <motion.div
                   key="step-recipient"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full space-y-3 pt-2"
+                  className="w-full h-full flex flex-col justify-between space-y-3 pt-2 overflow-y-auto no-scrollbar"
                 >
                   {!isAddingCustom ? (
-                    <>
+                    <div className="space-y-3">
                       <div className="relative">
                         <Search
                           size={14}
@@ -308,7 +311,7 @@ export const SendMoneyModal: React.FC = () => {
                           </div>
                         ))}
                       </div>
-                    </>
+                    </div>
                   ) : (
                     <div className="space-y-3 pt-2">
                       <div>
@@ -355,182 +358,184 @@ export const SendMoneyModal: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* STEP 2: AMOUNT INPUT (EXACT REPLICA OF USER REFERENCE SCREENSHOT) */}
+              {/* EXACT AMOUNT TRANSFER LAYOUT */}
               {step === 'amount' && selectedRecipient && (
                 <motion.div
                   key="step-amount"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="w-full flex flex-col items-center justify-between"
+                  className="w-full h-full flex flex-col justify-between"
                 >
-                  {/* Hero Amount & "No fees" display */}
-                  <div className="text-center pt-2 pb-1">
-                    <div className="text-5xl sm:text-6xl font-bold tracking-tight text-white tnum">
+                  {/* UPPER HERO SECTION */}
+                  <div className="flex-1 flex flex-col items-center justify-center py-2">
+                    <div className="text-6xl sm:text-7xl font-bold tracking-tight text-white tnum">
                       €{amountStr}
                     </div>
-                    <p className="text-xs text-[#8e8e93] mt-1.5 font-normal">
+                    <p className="text-xs text-[#8e8e93] mt-2 font-normal">
                       No fees
                     </p>
-                  </div>
 
-                  {/* Source Account Selector Pill */}
-                  <div className="relative my-2">
-                    <button
-                      onClick={() => {
-                        triggerHaptic('light');
-                        setIsAccountPickerOpen(!isAccountPickerOpen);
-                      }}
-                      className="rounded-full bg-[#2c2c2e] hover:bg-[#3a3a3c] py-1.5 px-3.5 flex items-center gap-2 text-xs font-medium text-white transition-colors"
-                    >
-                      {/* EU Flag Icon */}
-                      <span className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[8px] text-[#ffcc00] font-bold">
-                        ★
-                      </span>
-                      <span>
-                        {currentSource.name.replace(' Account', '')} · €{currentSource.balance.toFixed(2).replace('.', ',')}
-                      </span>
-                      <ChevronDown
-                        size={13}
-                        className={`text-[#8e8e93] transition-transform ${
-                          isAccountPickerOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
-
-                    {/* Account Dropdown */}
-                    {isAccountPickerOpen && (
-                      <div className="absolute top-9 left-1/2 -translate-x-1/2 w-56 bg-[#1c1c1e] rounded-2xl p-2 z-40 border border-white/10 shadow-2xl">
-                        {accounts.map((acc) => (
-                          <button
-                            key={acc.id}
-                            onClick={() => {
-                              setSourceAccountId(acc.id);
-                              setIsAccountPickerOpen(false);
-                            }}
-                            className="w-full p-2 rounded-xl text-left text-xs flex items-center justify-between hover:bg-[#2c2c2e] text-white"
-                          >
-                            <span>{acc.name}</span>
-                            <span className="text-[#8e8e93] font-mono">
-                              €{acc.balance.toFixed(2)}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Transfer Type Tabs: Free format / Structured */}
-                  <div className="w-full rounded-2xl bg-[#1c1c1e] p-1 grid grid-cols-2 gap-1 my-2">
-                    <button
-                      onClick={() => {
-                        triggerHaptic('light');
-                        setTransferType('free');
-                      }}
-                      className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
-                        transferType === 'free'
-                          ? 'bg-[#3a3a3c] text-white shadow-sm'
-                          : 'text-[#8e8e93] hover:text-white'
-                      }`}
-                    >
-                      Free format
-                    </button>
-                    <button
-                      onClick={() => {
-                        triggerHaptic('light');
-                        setTransferType('structured');
-                      }}
-                      className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
-                        transferType === 'structured'
-                          ? 'bg-[#3a3a3c] text-white shadow-sm'
-                          : 'text-[#8e8e93] hover:text-white'
-                      }`}
-                    >
-                      Structured
-                    </button>
-                  </div>
-
-                  {/* Reference Input */}
-                  <div className="w-full my-1">
-                    <input
-                      type="text"
-                      value={reference}
-                      onChange={(e) => setReference(e.target.value)}
-                      placeholder={transferType === 'free' ? 'Reference' : '+++000/0000/00000+++'}
-                      className="w-full rounded-2xl bg-[#1c1c1e] px-4 py-3 text-xs text-white placeholder-[#636366] focus:outline-none focus:bg-[#252528] transition-colors font-mono"
-                    />
-                  </div>
-
-                  {/* Calendar & Continue Row */}
-                  <div className="w-full flex items-center gap-2 my-1">
-                    <button
-                      onClick={() => {
-                        triggerHaptic('light');
-                        showToast('Transfer scheduled for standard SEPA execution', 'info');
-                      }}
-                      className="w-12 h-12 rounded-2xl bg-[#2c2c2e] hover:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-colors"
-                      title="Schedule transfer"
-                    >
-                      <Calendar size={18} />
-                    </button>
-
-                    <button
-                      onClick={handleProceedToReview}
-                      disabled={parsedAmount <= 0}
-                      className={`h-12 rounded-2xl flex-1 font-semibold text-xs flex items-center justify-center transition-all ${
-                        parsedAmount > 0
-                          ? 'bg-white text-black hover:bg-neutral-200 active:scale-[0.99]'
-                          : 'bg-[#3a3a3c] text-[#8e8e93] cursor-not-allowed opacity-80'
-                      }`}
-                    >
-                      Continue
-                    </button>
-                  </div>
-
-                  {/* Preset Amount Pills: €10, €20, €50, €100 */}
-                  <div className="w-full grid grid-cols-4 gap-2 my-2">
-                    {[10, 20, 50, 100].map((val) => (
+                    {/* Source Account Capsule Pill */}
+                    <div className="relative mt-4">
                       <button
-                        key={val}
-                        onClick={() => handlePresetAmount(val)}
-                        className="py-2 rounded-full bg-[#1c1c1e] hover:bg-[#2c2c2e] active:scale-95 text-xs font-medium text-white text-center transition-all border border-white/5"
+                        onClick={() => {
+                          triggerHaptic('light');
+                          setIsAccountPickerOpen(!isAccountPickerOpen);
+                        }}
+                        className="rounded-full bg-[#2c2c2e] hover:bg-[#3a3a3c] py-2 px-4 flex items-center gap-2 text-xs font-medium text-white transition-colors"
                       >
-                        € {val}
+                        <span className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[9px] text-[#ffcc00] font-bold">
+                          ★
+                        </span>
+                        <span>
+                          {currentSource.name.replace(' Account', '')} · €{currentSource.balance.toFixed(2).replace('.', ',')}
+                        </span>
+                        <ChevronDown
+                          size={14}
+                          className={`text-[#8e8e93] transition-transform ${
+                            isAccountPickerOpen ? 'rotate-180' : ''
+                          }`}
+                        />
                       </button>
-                    ))}
+
+                      {/* Dropdown */}
+                      {isAccountPickerOpen && (
+                        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-60 bg-[#1c1c1e] rounded-2xl p-2 z-50 border border-white/10 shadow-2xl">
+                          {accounts.map((acc) => (
+                            <button
+                              key={acc.id}
+                              onClick={() => {
+                                setSourceAccountId(acc.id);
+                                setIsAccountPickerOpen(false);
+                              }}
+                              className="w-full p-2.5 rounded-xl text-left text-xs flex items-center justify-between hover:bg-[#2c2c2e] text-white"
+                            >
+                              <span>{acc.name}</span>
+                              <span className="text-[#8e8e93] font-mono">
+                                €{acc.balance.toFixed(2)}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Keypad Grid (Borderless European Layout) */}
-                  <div className="w-full grid grid-cols-3 gap-y-2.5 pt-1">
-                    {['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'backspace'].map(
-                      (key) => (
+                  {/* LOWER CONTROLS & KEYPAD SECTION */}
+                  <div className="w-full space-y-2.5 shrink-0">
+                    {/* Free format / Structured Tabs */}
+                    <div className="w-full rounded-2xl bg-[#1c1c1e] p-1 grid grid-cols-2 gap-1">
+                      <button
+                        onClick={() => {
+                          triggerHaptic('light');
+                          setTransferType('free');
+                        }}
+                        className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
+                          transferType === 'free'
+                            ? 'bg-[#3a3a3c] text-white shadow-sm'
+                            : 'text-[#8e8e93] hover:text-white'
+                        }`}
+                      >
+                        Free format
+                      </button>
+                      <button
+                        onClick={() => {
+                          triggerHaptic('light');
+                          setTransferType('structured');
+                        }}
+                        className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
+                          transferType === 'structured'
+                            ? 'bg-[#3a3a3c] text-white shadow-sm'
+                            : 'text-[#8e8e93] hover:text-white'
+                        }`}
+                      >
+                        Structured
+                      </button>
+                    </div>
+
+                    {/* Reference Input Field */}
+                    <div className="w-full">
+                      <input
+                        type="text"
+                        value={reference}
+                        onChange={(e) => setReference(e.target.value)}
+                        placeholder={transferType === 'free' ? 'Reference' : '+++000/0000/00000+++'}
+                        className="w-full rounded-2xl bg-[#1c1c1e] px-4 py-3.5 text-xs text-white placeholder-[#636366] focus:outline-none focus:bg-[#252528] transition-colors font-mono"
+                      />
+                    </div>
+
+                    {/* Calendar & Continue Row */}
+                    <div className="w-full flex items-center gap-2.5">
+                      <button
+                        onClick={() => {
+                          triggerHaptic('light');
+                          showToast('Transfer scheduled for regular processing', 'info');
+                        }}
+                        className="w-13 h-13 rounded-2xl bg-[#2c2c2e] hover:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-colors"
+                        title="Schedule transfer"
+                      >
+                        <Calendar size={19} />
+                      </button>
+
+                      <button
+                        onClick={handleProceedToReview}
+                        disabled={parsedAmount <= 0}
+                        className={`h-13 rounded-2xl flex-1 font-semibold text-xs flex items-center justify-center transition-all ${
+                          parsedAmount > 0
+                            ? 'bg-white text-black hover:bg-neutral-200 active:scale-[0.99]'
+                            : 'bg-[#3a3a3c] text-[#8e8e93] cursor-not-allowed opacity-75'
+                        }`}
+                      >
+                        Continue
+                      </button>
+                    </div>
+
+                    {/* Preset Amount Pills: €10, €20, €50, €100 */}
+                    <div className="w-full grid grid-cols-4 gap-2 pt-0.5">
+                      {[10, 20, 50, 100].map((val) => (
                         <button
-                          key={key}
-                          onClick={() => handleKeypadPress(key)}
-                          className="h-11 text-2xl font-normal text-white flex items-center justify-center active:scale-90 transition-transform select-none"
+                          key={val}
+                          onClick={() => handlePresetAmount(val)}
+                          className="py-2.5 rounded-full bg-[#1c1c1e] hover:bg-[#2c2c2e] active:scale-95 text-xs font-medium text-white text-center transition-all border border-white/5"
                         >
-                          {key === 'backspace' ? (
-                            <Delete size={22} className="text-white/80" />
-                          ) : (
-                            key
-                          )}
+                          € {val}
                         </button>
-                      )
-                    )}
+                      ))}
+                    </div>
+
+                    {/* Keypad Grid (Clean Minimalist Full-Width) */}
+                    <div className="w-full grid grid-cols-3 gap-y-1 pt-1 pb-1">
+                      {['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'backspace'].map(
+                        (key) => (
+                          <button
+                            key={key}
+                            onClick={() => handleKeypadPress(key)}
+                            className="h-13 text-3xl font-light text-white flex items-center justify-center active:scale-90 transition-transform select-none"
+                          >
+                            {key === 'backspace' ? (
+                              <Delete size={24} className="text-white/80" />
+                            ) : (
+                              key
+                            )}
+                          </button>
+                        )
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* STEP 3: REVIEW CONFIRMATION */}
+              {/* REVIEW SCREEN */}
               {step === 'review' && selectedRecipient && (
                 <motion.div
                   key="step-review"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full space-y-4 pt-3"
+                  className="w-full h-full flex flex-col justify-between py-2"
                 >
-                  <div className="bg-[#1c1c1e] rounded-3xl p-5 space-y-3.5 text-xs">
+                  <div className="bg-[#1c1c1e] rounded-3xl p-5 space-y-4 text-xs">
                     <div className="flex items-center justify-between pb-3 border-b border-white/5">
                       <span className="text-[#8e8e93]">Recipient</span>
                       <div className="text-right">
@@ -550,7 +555,7 @@ export const SendMoneyModal: React.FC = () => {
 
                     <div className="flex items-center justify-between pb-3 border-b border-white/5">
                       <span className="text-[#8e8e93]">Amount</span>
-                      <span className="text-xl font-bold text-white tnum">
+                      <span className="text-2xl font-bold text-white tnum">
                         €{parsedAmount.toFixed(2).replace('.', ',')}
                       </span>
                     </div>
@@ -583,13 +588,13 @@ export const SendMoneyModal: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* STEP 4: PROCESSING STATE */}
+              {/* PROCESSING SCREEN */}
               {step === 'processing' && (
                 <motion.div
                   key="step-processing"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex flex-col items-center justify-center py-16 text-center"
+                  className="flex-1 flex flex-col items-center justify-center text-center"
                 >
                   <ProcessingOrb status="processing" />
                   <h3 className="text-base font-semibold text-white mt-4">
@@ -601,13 +606,13 @@ export const SendMoneyModal: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* STEP 5: SUCCESS STATE */}
+              {/* SUCCESS SCREEN */}
               {step === 'success' && selectedRecipient && (
                 <motion.div
                   key="step-success"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center text-center py-8"
+                  className="flex-1 flex flex-col items-center justify-center text-center py-4"
                 >
                   <ProcessingOrb status="success" />
 
