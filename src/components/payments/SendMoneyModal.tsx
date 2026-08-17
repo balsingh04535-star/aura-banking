@@ -191,10 +191,10 @@ export const SendMoneyModal: React.FC = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 bg-black text-white flex flex-col justify-between px-5 pt-3 pb-8 max-w-md mx-auto h-[100dvh] overflow-hidden select-none font-sans"
+          className="fixed inset-0 z-50 bg-[#000000] text-white flex flex-col justify-between px-4 pt-3 pb-6 max-w-sm sm:max-w-md mx-auto h-[100dvh] overflow-y-auto no-scrollbar select-none font-sans"
         >
-          {/* 1. TOP HEADER (Exact to reference) */}
-          <div className="flex items-center justify-between w-full pt-1 pb-1 shrink-0">
+          {/* HEADER (Exact to screenshot) */}
+          <div className="flex items-center justify-between w-full pt-1 shrink-0">
             <button
               onClick={() => {
                 triggerHaptic('light');
@@ -206,12 +206,12 @@ export const SendMoneyModal: React.FC = () => {
                   handleClose();
                 }
               }}
-              className="w-10 h-10 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center active:bg-[#2c2c2e] transition-colors"
+              className="w-11 h-11 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center active:bg-[#2c2c2e] transition-colors"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={19} />
             </button>
 
-            {/* Recipient Name & IBAN */}
+            {/* Recipient Details */}
             <div
               onClick={() => {
                 triggerHaptic('light');
@@ -219,15 +219,15 @@ export const SendMoneyModal: React.FC = () => {
               }}
               className="text-center cursor-pointer active:opacity-75 transition-opacity px-2"
             >
-              <h2 className="text-sm font-bold tracking-wide text-white uppercase truncate max-w-[210px]">
+              <h2 className="text-[15px] font-bold tracking-wide text-white uppercase truncate max-w-[210px]">
                 {selectedRecipient?.name || 'BALVINDER SINGH'}
               </h2>
-              <p className="text-[11px] text-[#8e8e93] font-mono tracking-tight truncate max-w-[210px]">
+              <p className="text-[12px] text-[#8e8e93] font-mono tracking-tight truncate max-w-[210px] mt-0.5">
                 {selectedRecipient?.iban || 'BE37 9676 3046 7428'}
               </p>
             </div>
 
-            {/* Recipient Avatar Circle with Blue Mini Badge */}
+            {/* Avatar Badge with Mini Cyan Tag */}
             <div
               onClick={() => {
                 triggerHaptic('light');
@@ -235,32 +235,32 @@ export const SendMoneyModal: React.FC = () => {
               }}
               className="relative cursor-pointer"
             >
-              <div className="w-10 h-10 rounded-full bg-[#8370ff] text-white font-bold text-xs flex items-center justify-center shadow-sm">
+              <div className="w-11 h-11 rounded-full bg-[#8370ff] text-white font-bold text-sm flex items-center justify-center shadow-sm">
                 {recipientInitials}
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00d2ff] border-2 border-black flex items-center justify-center">
-                <span className="text-[7px] font-extrabold text-black">Σ</span>
+                <span className="text-[8px] font-black text-black leading-none">Σ</span>
               </div>
             </div>
           </div>
 
-          {/* 2. MAIN WORKSPACE */}
-          <div className="flex-1 flex flex-col justify-between w-full min-h-0 overflow-hidden py-1">
+          {/* MAIN FLOW BODY */}
+          <div className="flex-1 flex flex-col justify-between w-full my-auto py-2">
             <AnimatePresence mode="wait">
-              {/* RECIPIENT SELECTOR VIEW */}
+              {/* RECIPIENT LIST SCREEN */}
               {step === 'recipient' && (
                 <motion.div
                   key="step-recipient"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full h-full flex flex-col justify-between space-y-3 pt-2 overflow-y-auto no-scrollbar"
+                  className="w-full h-full flex flex-col justify-between space-y-3 pt-2"
                 >
                   {!isAddingCustom ? (
                     <div className="space-y-3">
                       <div className="relative">
                         <Search
-                          size={14}
+                          size={15}
                           className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8e8e93]"
                         />
                         <input
@@ -274,7 +274,7 @@ export const SendMoneyModal: React.FC = () => {
 
                       <button
                         onClick={() => setIsAddingCustom(true)}
-                        className="w-full p-3 rounded-2xl bg-[#1c1c1e] text-xs font-medium text-white hover:bg-[#2c2c2e] transition-colors flex items-center justify-center gap-2"
+                        className="w-full p-3.5 rounded-2xl bg-[#1c1c1e] text-xs font-medium text-white hover:bg-[#2c2c2e] transition-colors flex items-center justify-center gap-2"
                       >
                         <UserPlus size={15} />
                         <span>Add New Beneficiary</span>
@@ -288,7 +288,7 @@ export const SendMoneyModal: React.FC = () => {
                           <div
                             key={ben.id}
                             onClick={() => handleSelectRecipient(ben)}
-                            className="p-3 rounded-2xl bg-[#1c1c1e] hover:bg-[#2c2c2e] flex items-center justify-between cursor-pointer transition-colors"
+                            className="p-3.5 rounded-2xl bg-[#1c1c1e] hover:bg-[#2c2c2e] flex items-center justify-between cursor-pointer transition-colors"
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-[#2c2c2e] flex items-center justify-center font-bold text-xs text-white shrink-0">
@@ -358,7 +358,7 @@ export const SendMoneyModal: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* EXACT AMOUNT TRANSFER LAYOUT */}
+              {/* EXACT AMOUNT SCREEN AS PER SCREENSHOT */}
               {step === 'amount' && selectedRecipient && (
                 <motion.div
                   key="step-amount"
@@ -367,27 +367,30 @@ export const SendMoneyModal: React.FC = () => {
                   exit={{ opacity: 0 }}
                   className="w-full h-full flex flex-col justify-between"
                 >
-                  {/* UPPER HERO SECTION */}
-                  <div className="flex-1 flex flex-col items-center justify-center py-2">
-                    <div className="text-6xl sm:text-7xl font-bold tracking-tight text-white tnum">
-                      €{amountStr}
+                  {/* AMOUNT HERO WITH BLUE CURSOR BAR */}
+                  <div className="flex flex-col items-center justify-center pt-2 pb-1">
+                    <div className="flex items-center justify-center text-[54px] sm:text-[62px] font-bold text-white tracking-tight leading-none tnum">
+                      <span>€{amountStr}</span>
+                      {/* Exact Blue Blinking Caret from Screenshot */}
+                      <span className="w-[3px] h-11 sm:h-13 bg-[#3b82f6] inline-block ml-1 animate-pulse" />
                     </div>
-                    <p className="text-xs text-[#8e8e93] mt-2 font-normal">
+                    <p className="text-[13px] text-[#8e8e93] font-normal mt-2">
                       No fees
                     </p>
 
                     {/* Source Account Capsule Pill */}
-                    <div className="relative mt-4">
+                    <div className="relative mt-3">
                       <button
                         onClick={() => {
                           triggerHaptic('light');
                           setIsAccountPickerOpen(!isAccountPickerOpen);
                         }}
-                        className="rounded-full bg-[#2c2c2e] hover:bg-[#3a3a3c] py-2 px-4 flex items-center gap-2 text-xs font-medium text-white transition-colors"
+                        className="rounded-full bg-[#242426] hover:bg-[#323236] py-2 px-4 flex items-center gap-2 text-[13px] font-medium text-white transition-colors"
                       >
-                        <span className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[9px] text-[#ffcc00] font-bold">
+                        {/* EU Star Circle */}
+                        <div className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[9px] text-[#ffcc00] font-bold">
                           ★
-                        </span>
+                        </div>
                         <span>
                           {currentSource.name.replace(' Account', '')} · €{currentSource.balance.toFixed(2).replace('.', ',')}
                         </span>
@@ -422,16 +425,16 @@ export const SendMoneyModal: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* LOWER CONTROLS & KEYPAD SECTION */}
-                  <div className="w-full space-y-2.5 shrink-0">
-                    {/* Free format / Structured Tabs */}
-                    <div className="w-full rounded-2xl bg-[#1c1c1e] p-1 grid grid-cols-2 gap-1">
+                  {/* CONTROLS & KEYPAD (Exact layout) */}
+                  <div className="w-full space-y-3 shrink-0 pt-2">
+                    {/* Free format / Structured Toggle */}
+                    <div className="w-full rounded-[22px] bg-[#1c1c1e] p-1 grid grid-cols-2 gap-1">
                       <button
                         onClick={() => {
                           triggerHaptic('light');
                           setTransferType('free');
                         }}
-                        className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
+                        className={`py-2.5 rounded-[18px] text-[13px] font-medium text-center transition-all ${
                           transferType === 'free'
                             ? 'bg-[#3a3a3c] text-white shadow-sm'
                             : 'text-[#8e8e93] hover:text-white'
@@ -444,7 +447,7 @@ export const SendMoneyModal: React.FC = () => {
                           triggerHaptic('light');
                           setTransferType('structured');
                         }}
-                        className={`py-2 rounded-xl text-xs font-medium text-center transition-all ${
+                        className={`py-2.5 rounded-[18px] text-[13px] font-medium text-center transition-all ${
                           transferType === 'structured'
                             ? 'bg-[#3a3a3c] text-white shadow-sm'
                             : 'text-[#8e8e93] hover:text-white'
@@ -454,15 +457,18 @@ export const SendMoneyModal: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* Reference Input Field */}
-                    <div className="w-full">
+                    {/* Reference Input */}
+                    <div>
                       <input
                         type="text"
                         value={reference}
                         onChange={(e) => setReference(e.target.value)}
                         placeholder={transferType === 'free' ? 'Reference' : '+++000/0000/00000+++'}
-                        className="w-full rounded-2xl bg-[#1c1c1e] px-4 py-3.5 text-xs text-white placeholder-[#636366] focus:outline-none focus:bg-[#252528] transition-colors font-mono"
+                        className="w-full rounded-[22px] bg-[#1c1c1e] px-4 py-3.5 text-[13px] text-white placeholder-[#636366] focus:outline-none focus:bg-[#242426] transition-colors"
                       />
+                      <span className="block text-[11px] text-[#8e8e93] px-4 mt-1 font-normal">
+                        Reference
+                      </span>
                     </div>
 
                     {/* Calendar & Continue Row */}
@@ -470,18 +476,18 @@ export const SendMoneyModal: React.FC = () => {
                       <button
                         onClick={() => {
                           triggerHaptic('light');
-                          showToast('Transfer scheduled for regular processing', 'info');
+                          showToast('Scheduled execution date enabled', 'info');
                         }}
-                        className="w-13 h-13 rounded-2xl bg-[#2c2c2e] hover:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-colors"
+                        className="w-13 h-13 rounded-[20px] bg-[#2c2c2e] hover:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-colors"
                         title="Schedule transfer"
                       >
-                        <Calendar size={19} />
+                        <Calendar size={18} />
                       </button>
 
                       <button
                         onClick={handleProceedToReview}
                         disabled={parsedAmount <= 0}
-                        className={`h-13 rounded-2xl flex-1 font-semibold text-xs flex items-center justify-center transition-all ${
+                        className={`h-13 rounded-[20px] flex-1 font-semibold text-sm flex items-center justify-center transition-all ${
                           parsedAmount > 0
                             ? 'bg-white text-black hover:bg-neutral-200 active:scale-[0.99]'
                             : 'bg-[#3a3a3c] text-[#8e8e93] cursor-not-allowed opacity-75'
@@ -491,30 +497,30 @@ export const SendMoneyModal: React.FC = () => {
                       </button>
                     </div>
 
-                    {/* Preset Amount Pills: €10, €20, €50, €100 */}
-                    <div className="w-full grid grid-cols-4 gap-2 pt-0.5">
+                    {/* Preset Amount Pills: € 10, € 20, € 50, € 100 */}
+                    <div className="w-full grid grid-cols-4 gap-2">
                       {[10, 20, 50, 100].map((val) => (
                         <button
                           key={val}
                           onClick={() => handlePresetAmount(val)}
-                          className="py-2.5 rounded-full bg-[#1c1c1e] hover:bg-[#2c2c2e] active:scale-95 text-xs font-medium text-white text-center transition-all border border-white/5"
+                          className="py-2.5 rounded-full bg-[#1c1c1e] hover:bg-[#2c2c2e] active:scale-95 text-xs font-semibold text-white text-center transition-all"
                         >
                           € {val}
                         </button>
                       ))}
                     </div>
 
-                    {/* Keypad Grid (Clean Minimalist Full-Width) */}
-                    <div className="w-full grid grid-cols-3 gap-y-1 pt-1 pb-1">
+                    {/* Borderless Numeric Keypad */}
+                    <div className="w-full grid grid-cols-3 gap-y-1.5 pt-1">
                       {['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'backspace'].map(
                         (key) => (
                           <button
                             key={key}
                             onClick={() => handleKeypadPress(key)}
-                            className="h-13 text-3xl font-light text-white flex items-center justify-center active:scale-90 transition-transform select-none"
+                            className="h-12 text-3xl font-light text-white flex items-center justify-center active:scale-90 transition-transform select-none"
                           >
                             {key === 'backspace' ? (
-                              <Delete size={24} className="text-white/80" />
+                              <Delete size={22} className="text-white/80" />
                             ) : (
                               key
                             )}
