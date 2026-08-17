@@ -193,8 +193,8 @@ export const SendMoneyModal: React.FC = () => {
           transition={{ duration: 0.15 }}
           className="fixed inset-0 z-50 bg-[#000000] text-white flex flex-col justify-between w-full h-[100dvh] overflow-hidden select-none font-sans"
         >
-          {/* Inner Responsive Container spanning 100% width cleanly */}
-          <div className="w-full h-full max-w-lg mx-auto flex flex-col justify-between px-4 sm:px-6 pt-3 pb-6">
+          {/* Inner Responsive Container spanning 100% width cleanly with Safe Area Insets */}
+          <div className="w-full h-full max-w-lg mx-auto flex flex-col justify-between px-4 sm:px-6 pt-[max(env(safe-area-inset-top,0px),16px)] pb-[max(env(safe-area-inset-bottom,0px),24px)]">
             {/* HEADER */}
             <div className="flex items-center justify-between w-full pt-1 shrink-0">
               <button

@@ -4,10 +4,10 @@ import { useBanking } from '../../store/BankingContext';
 import { triggerHaptic } from '../../hooks/useHaptic';
 
 export const TopHeader: React.FC = () => {
-  const { setActiveTab, setIsFilterSheetOpen, filter, setFilter } = useBanking();
+  const { setActiveTab, filter, setFilter } = useBanking();
 
   return (
-    <header className="w-full px-4 pt-3 pb-2 flex items-center justify-between gap-2.5 select-none font-sans">
+    <header className="w-full px-4 pt-[max(env(safe-area-inset-top,0px),16px)] pb-2 flex items-center justify-between gap-2.5 select-none font-sans">
       {/* Profile Avatar (Coral/Orange circle with camera glyph + notification red dot) */}
       <button
         onClick={() => {
