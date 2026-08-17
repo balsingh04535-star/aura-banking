@@ -1,158 +1,65 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, ChevronDown, Check, User } from 'lucide-react';
+import React from 'react';
+import { Search, BarChart3, CreditCard, Camera } from 'lucide-react';
 import { useBanking } from '../../store/BankingContext';
-import { formatCurrency } from '../../utils/formatters';
 import { triggerHaptic } from '../../hooks/useHaptic';
 
 export const TopHeader: React.FC = () => {
-  const {
-    activeAccount,
-    accounts,
-    setActiveAccountId,
-    unreadNotificationCount,
-    setIsNotificationsOpen,
-    setActiveTab,
-  } = useBanking();
-
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsAccountDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
-  };
+  const { setActiveTab, setIsFilterSheetOpen, filter, setFilter } = useBanking();
 
   return (
-    <header className="w-full px-5 pt-4 pb-3 flex flex-col gap-3 relative z-30 select-none">
-      {/* Top Row: Minimal User Avatar + Greeting + Notifications */}
-      <div className="flex items-center justify-between">
-        {/* User Info & Minimal Avatar */}
-        <div
-          onClick={() => {
-            triggerHaptic('light');
-            setActiveTab('profile');
-          }}
-          className="flex items-center gap-3 cursor-pointer group"
-        >
-          <div className="w-10 h-10 rounded-full bg-[#141618] border border-white/10 flex items-center justify-center text-white/80 group-hover:border-white/25 transition-all">
-            <User size={19} strokeWidth={1.75} />
-          </div>
+    <header className="w-full px-4 pt-3 pb-2 flex items-center justify-between gap-2.5 select-none font-sans">
+      {/* Profile Avatar (Coral/Orange circle with camera glyph + notification red dot) */}
+      <button
+        onClick={() => {
+          triggerHaptic('light');
+          setActiveTab('profile');
+        }}
+        className="relative w-11 h-11 rounded-full bg-[#ff6c47] text-white flex items-center justify-center shrink-0 active:scale-95 transition-transform"
+        aria-label="Profile"
+      >
+        <Camera size={19} strokeWidth={2} />
+        {/* Red notification dot */}
+        <div className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-[#ff3b30] border-2 border-black" />
+      </button>
 
-          <div>
-            <span className="text-xs font-normal text-[#7E848D]">
-              {getGreeting()},
-            </span>
-            <h1 className="text-sm font-semibold tracking-tight text-white">
-              Anshdeep Singh
-            </h1>
-          </div>
-        </div>
-
-        {/* Notification Button */}
-        <button
-          onClick={() => {
-            triggerHaptic('light');
-            setIsNotificationsOpen(true);
-          }}
-          className="relative w-10 h-10 rounded-full bg-[#141618] border border-white/10 text-white/80 hover:text-white hover:border-white/25 flex items-center justify-center transition-all"
-          aria-label="Open Notifications"
-        >
-          <Bell size={17} strokeWidth={1.75} />
-          {unreadNotificationCount > 0 && (
-            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-white" />
-          )}
-        </button>
+      {/* Center Search Bar Pill */}
+      <div className="flex-1 relative">
+        <Search
+          size={16}
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8e8e93]"
+        />
+        <input
+          type="text"
+          value={filter.query}
+          onChange={(e) => setFilter((prev) => ({ ...prev, query: e.target.value }))}
+          placeholder="Search"
+          className="w-full h-11 bg-[#1c1c1e] text-white placeholder-[#8e8e93] text-sm rounded-full pl-10 pr-4 outline-none focus:bg-[#252528] transition-colors"
+        />
       </div>
 
-      {/* Account Selector Pill with rounded-full edges */}
-      <div className="relative" ref={dropdownRef}>
-        <button
-          onClick={() => {
-            triggerHaptic('light');
-            setIsAccountDropdownOpen(!isAccountDropdownOpen);
-          }}
-          className="rounded-full py-1.5 px-3.5 flex items-center gap-2 text-xs font-medium text-white bg-[#141618] border border-white/10 hover:border-white/20 transition-all active:scale-98"
-        >
-          <div className="w-1.5 h-1.5 rounded-full bg-white/70" />
-          <span className="font-medium text-white">{activeAccount.name}</span>
-          <span className="text-[#7E848D] text-[11px] tnum">
-            •• {activeAccount.accountNumber}
-          </span>
-          <ChevronDown
-            size={13}
-            className={`text-[#7E848D] transition-transform duration-200 ${
-              isAccountDropdownOpen ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
+      {/* Analytics / Insights Button */}
+      <button
+        onClick={() => {
+          triggerHaptic('light');
+          setActiveTab('insights');
+        }}
+        className="w-11 h-11 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center shrink-0 hover:bg-[#2c2c2e] active:scale-95 transition-all"
+        aria-label="Analytics"
+      >
+        <BarChart3 size={18} strokeWidth={2} />
+      </button>
 
-        {/* Dropdown Menu */}
-        <AnimatePresence>
-          {isAccountDropdownOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -6, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.96 }}
-              transition={{ duration: 0.15, ease: 'easeOut' }}
-              className="absolute top-10 left-0 w-64 bg-[#141618] rounded-2xl p-2 z-50 border border-white/10 shadow-xl"
-            >
-              <div className="px-3 py-1.5 text-[10px] font-medium tracking-wider uppercase text-[#7E848D]">
-                Select Account
-              </div>
-              <div className="space-y-1">
-                {accounts.map((acc) => {
-                  const isSelected = acc.id === activeAccount.id;
-                  return (
-                    <button
-                      key={acc.id}
-                      onClick={() => {
-                        triggerHaptic('light');
-                        setActiveAccountId(acc.id);
-                        setIsAccountDropdownOpen(false);
-                      }}
-                      className={`w-full p-2.5 rounded-xl flex items-center justify-between text-left transition-colors ${
-                        isSelected
-                          ? 'bg-white/10 text-white'
-                          : 'hover:bg-white/5 text-[#7E848D] hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-2 h-2 rounded-full bg-white/60 shrink-0" />
-                        <div>
-                          <p className="text-xs font-semibold">{acc.name}</p>
-                          <p className="text-[10px] text-[#7E848D] tnum">
-                            {formatCurrency(acc.balance, acc.currency)}
-                          </p>
-                        </div>
-                      </div>
-                      {isSelected && (
-                        <Check size={14} className="text-white shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Cards Button */}
+      <button
+        onClick={() => {
+          triggerHaptic('light');
+          setActiveTab('cards');
+        }}
+        className="w-11 h-11 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center shrink-0 hover:bg-[#2c2c2e] active:scale-95 transition-all"
+        aria-label="Cards"
+      >
+        <CreditCard size={18} strokeWidth={2} />
+      </button>
     </header>
   );
 };
