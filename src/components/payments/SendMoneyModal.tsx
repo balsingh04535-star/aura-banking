@@ -208,7 +208,7 @@ export const SendMoneyModal: React.FC = () => {
                     handleClose();
                   }
                 }}
-                className="w-11 h-11 rounded-full bg-[#1c1c1e] text-white flex items-center justify-center active:bg-[#2c2c2e] transition-colors"
+                className="w-11 h-11 rounded-full bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.18)] text-white flex items-center justify-center hover:bg-white/[0.15] active:scale-95 transition-all"
               >
                 <ArrowLeft size={19} />
               </button>
@@ -237,10 +237,10 @@ export const SendMoneyModal: React.FC = () => {
                 }}
                 className="relative cursor-pointer"
               >
-                <div className="w-11 h-11 rounded-full bg-[#8370ff] text-white font-bold text-sm flex items-center justify-center shadow-sm">
+                <div className="w-11 h-11 rounded-full bg-[#8370ff] text-white font-bold text-sm flex items-center justify-center shadow-lg border border-white/20">
                   {recipientInitials}
                 </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00d2ff] border-2 border-black flex items-center justify-center">
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#00d2ff] border-2 border-black flex items-center justify-center shadow-sm">
                   <span className="text-[8px] font-black text-black leading-none">Σ</span>
                 </div>
               </div>
@@ -270,13 +270,13 @@ export const SendMoneyModal: React.FC = () => {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search contact or IBAN..."
-                            className="w-full bg-[#1c1c1e] rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-[#8e8e93] focus:outline-none"
+                            className="w-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-[#8e8e93] focus:outline-none focus:border-white/30"
                           />
                         </div>
 
                         <button
                           onClick={() => setIsAddingCustom(true)}
-                          className="w-full p-3.5 rounded-2xl bg-[#1c1c1e] text-xs font-medium text-white hover:bg-[#2c2c2e] transition-colors flex items-center justify-center gap-2"
+                          className="w-full p-3.5 rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] text-xs font-medium text-white hover:bg-white/[0.12] transition-colors flex items-center justify-center gap-2"
                         >
                           <UserPlus size={15} />
                           <span>Add New Beneficiary</span>
@@ -290,10 +290,10 @@ export const SendMoneyModal: React.FC = () => {
                             <div
                               key={ben.id}
                               onClick={() => handleSelectRecipient(ben)}
-                              className="p-3.5 rounded-2xl bg-[#1c1c1e] hover:bg-[#2c2c2e] flex items-center justify-between cursor-pointer transition-colors"
+                              className="p-3.5 rounded-2xl bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] hover:bg-white/[0.12] hover:border-white/[0.18] flex items-center justify-between cursor-pointer transition-all"
                             >
                               <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#2c2c2e] flex items-center justify-center font-bold text-xs text-white shrink-0">
+                                <div className="w-10 h-10 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center font-bold text-xs text-white shrink-0">
                                   {ben.name
                                     .split(' ')
                                     .map((n) => n[0])
@@ -325,7 +325,7 @@ export const SendMoneyModal: React.FC = () => {
                             value={customName}
                             onChange={(e) => setCustomName(e.target.value)}
                             placeholder="e.g. BALVINDER SINGH"
-                            className="w-full bg-[#1c1c1e] rounded-xl p-3 text-xs text-white focus:outline-none"
+                            className="w-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] rounded-xl p-3 text-xs text-white focus:outline-none"
                           />
                         </div>
                         <div>
@@ -337,14 +337,14 @@ export const SendMoneyModal: React.FC = () => {
                             value={customIban}
                             onChange={(e) => setCustomIban(e.target.value)}
                             placeholder="BE37 0000 0000 0000"
-                            className="w-full bg-[#1c1c1e] rounded-xl p-3 text-xs text-white font-mono focus:outline-none"
+                            className="w-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] rounded-xl p-3 text-xs text-white font-mono focus:outline-none"
                           />
                         </div>
 
                         <div className="flex gap-2 pt-2">
                           <button
                             onClick={() => setIsAddingCustom(false)}
-                            className="flex-1 py-3 rounded-xl bg-[#1c1c1e] text-xs font-medium text-white"
+                            className="flex-1 py-3 rounded-xl bg-white/[0.06] text-xs font-medium text-white border border-white/10"
                           >
                             Cancel
                           </button>
@@ -360,7 +360,7 @@ export const SendMoneyModal: React.FC = () => {
                   </motion.div>
                 )}
 
-                {/* EXACT AMOUNT SCREEN AS PER SCREENSHOT */}
+                {/* EXACT AMOUNT SCREEN WITH LIQUID GLASS BUTTONS & CONTAINERS */}
                 {step === 'amount' && selectedRecipient && (
                   <motion.div
                     key="step-amount"
@@ -380,17 +380,17 @@ export const SendMoneyModal: React.FC = () => {
                         No fees
                       </p>
 
-                      {/* Source Account Capsule Pill */}
+                      {/* Source Account Liquid Glass Pill */}
                       <div className="relative mt-3">
                         <button
                           onClick={() => {
                             triggerHaptic('light');
                             setIsAccountPickerOpen(!isAccountPickerOpen);
                           }}
-                          className="rounded-full bg-[#242426] hover:bg-[#323236] py-2 px-4 flex items-center gap-2 text-[13px] font-medium text-white transition-colors"
+                          className="rounded-full bg-white/[0.08] backdrop-blur-2xl border border-white/[0.14] shadow-[0_4px_14px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:bg-white/[0.14] py-2 px-4 flex items-center gap-2 text-[13px] font-medium text-white transition-all active:scale-98"
                         >
                           {/* EU Star Circle */}
-                          <div className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[9px] text-[#ffcc00] font-bold">
+                          <div className="w-4 h-4 rounded-full bg-[#003399] flex items-center justify-center text-[9px] text-[#ffcc00] font-bold shadow-sm">
                             ★
                           </div>
                           <span>
@@ -406,7 +406,7 @@ export const SendMoneyModal: React.FC = () => {
 
                         {/* Dropdown */}
                         {isAccountPickerOpen && (
-                          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-60 bg-[#1c1c1e] rounded-2xl p-2 z-50 border border-white/10 shadow-2xl">
+                          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-60 bg-[#141618]/95 backdrop-blur-2xl rounded-2xl p-2 z-50 border border-white/15 shadow-2xl">
                             {accounts.map((acc) => (
                               <button
                                 key={acc.id}
@@ -414,7 +414,7 @@ export const SendMoneyModal: React.FC = () => {
                                   setSourceAccountId(acc.id);
                                   setIsAccountPickerOpen(false);
                                 }}
-                                className="w-full p-2.5 rounded-xl text-left text-xs flex items-center justify-between hover:bg-[#2c2c2e] text-white"
+                                className="w-full p-2.5 rounded-xl text-left text-xs flex items-center justify-between hover:bg-white/10 text-white transition-colors"
                               >
                                 <span>{acc.name}</span>
                                 <span className="text-[#8e8e93] font-mono">
@@ -427,10 +427,10 @@ export const SendMoneyModal: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* CONTROLS & KEYPAD SECTION */}
+                    {/* CONTROLS & KEYPAD SECTION (ALL LIQUID GLASS) */}
                     <div className="w-full space-y-2.5 shrink-0 pt-1">
-                      {/* Free format / Structured Toggle */}
-                      <div className="w-full rounded-[22px] bg-[#1c1c1e] p-1 grid grid-cols-2 gap-1">
+                      {/* Free format / Structured Toggle (Liquid Glass Capsule) */}
+                      <div className="w-full rounded-[22px] bg-white/[0.06] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.14)] p-1 grid grid-cols-2 gap-1">
                         <button
                           onClick={() => {
                             triggerHaptic('light');
@@ -438,7 +438,7 @@ export const SendMoneyModal: React.FC = () => {
                           }}
                           className={`py-2.5 rounded-[18px] text-[13px] font-medium text-center transition-all ${
                             transferType === 'free'
-                              ? 'bg-[#3a3a3c] text-white shadow-sm'
+                              ? 'bg-white/[0.16] backdrop-blur-xl border border-white/[0.22] text-white shadow-[0_4px_14px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]'
                               : 'text-[#8e8e93] hover:text-white'
                           }`}
                         >
@@ -451,7 +451,7 @@ export const SendMoneyModal: React.FC = () => {
                           }}
                           className={`py-2.5 rounded-[18px] text-[13px] font-medium text-center transition-all ${
                             transferType === 'structured'
-                              ? 'bg-[#3a3a3c] text-white shadow-sm'
+                              ? 'bg-white/[0.16] backdrop-blur-xl border border-white/[0.22] text-white shadow-[0_4px_14px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]'
                               : 'text-[#8e8e93] hover:text-white'
                           }`}
                         >
@@ -459,28 +459,28 @@ export const SendMoneyModal: React.FC = () => {
                         </button>
                       </div>
 
-                      {/* Reference Input */}
+                      {/* Reference Input (Liquid Glass Field) */}
                       <div>
                         <input
                           type="text"
                           value={reference}
                           onChange={(e) => setReference(e.target.value)}
                           placeholder={transferType === 'free' ? 'Reference' : '+++000/0000/00000+++'}
-                          className="w-full rounded-[22px] bg-[#1c1c1e] px-4 py-3.5 text-[13px] text-white placeholder-[#636366] focus:outline-none focus:bg-[#242426] transition-colors"
+                          className="w-full rounded-[22px] bg-white/[0.06] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] px-4 py-3.5 text-[13px] text-white placeholder-[#636366] focus:outline-none focus:border-white/30 focus:bg-white/[0.09] transition-all"
                         />
                         <span className="block text-[11px] text-[#8e8e93] px-4 mt-1 font-normal">
                           Reference
                         </span>
                       </div>
 
-                      {/* Calendar & Continue Row */}
+                      {/* Calendar & Continue Row (Liquid Glass Buttons) */}
                       <div className="w-full flex items-center gap-2.5">
                         <button
                           onClick={() => {
                             triggerHaptic('light');
                             showToast('Scheduled execution date enabled', 'info');
                           }}
-                          className="w-[52px] h-[52px] rounded-[20px] bg-[#2c2c2e] hover:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-colors"
+                          className="w-[52px] h-[52px] rounded-[20px] bg-white/[0.08] backdrop-blur-2xl border border-white/[0.14] shadow-[0_4px_14px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:bg-white/[0.15] hover:border-white/[0.25] flex items-center justify-center text-[#8e8e93] hover:text-white shrink-0 transition-all active:scale-95"
                           title="Schedule transfer"
                         >
                           <Calendar size={18} />
@@ -491,21 +491,21 @@ export const SendMoneyModal: React.FC = () => {
                           disabled={parsedAmount <= 0}
                           className={`h-[52px] rounded-[20px] flex-1 font-semibold text-sm flex items-center justify-center transition-all ${
                             parsedAmount > 0
-                              ? 'bg-white text-black hover:bg-neutral-200 active:scale-[0.99]'
-                              : 'bg-[#3a3a3c] text-[#8e8e93] cursor-not-allowed opacity-75'
+                              ? 'bg-white text-black hover:bg-neutral-200 active:scale-[0.99] shadow-[0_4px_20px_rgba(255,255,255,0.3)]'
+                              : 'bg-white/[0.08] backdrop-blur-2xl border border-white/[0.1] text-white/40 cursor-not-allowed shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]'
                           }`}
                         >
                           Continue
                         </button>
                       </div>
 
-                      {/* Preset Amount Pills: € 10, € 20, € 50, € 100 */}
+                      {/* Preset Amount Pills: € 10, € 20, € 50, € 100 (Liquid Glass Capsule Buttons) */}
                       <div className="w-full grid grid-cols-4 gap-2">
                         {[10, 20, 50, 100].map((val) => (
                           <button
                             key={val}
                             onClick={() => handlePresetAmount(val)}
-                            className="h-10 rounded-full bg-[#1c1c1e] hover:bg-[#2c2c2e] active:scale-95 text-xs font-semibold text-white text-center transition-all flex items-center justify-center"
+                            className="h-10 rounded-full bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] hover:bg-white/[0.14] hover:border-white/[0.25] active:scale-95 text-xs font-semibold text-white text-center transition-all flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.2)]"
                           >
                             € {val}
                           </button>
@@ -543,7 +543,7 @@ export const SendMoneyModal: React.FC = () => {
                     exit={{ opacity: 0, y: -10 }}
                     className="w-full h-full flex flex-col justify-between py-2"
                   >
-                    <div className="bg-[#1c1c1e] rounded-3xl p-5 space-y-4 text-xs">
+                    <div className="bg-white/[0.06] backdrop-blur-2xl border border-white/[0.12] rounded-3xl p-5 space-y-4 text-xs shadow-2xl">
                       <div className="flex items-center justify-between pb-3 border-b border-white/5">
                         <span className="text-[#8e8e93]">Recipient</span>
                         <div className="text-right">
@@ -588,7 +588,7 @@ export const SendMoneyModal: React.FC = () => {
 
                     <button
                       onClick={handleStartAuthentication}
-                      className="w-full py-4 rounded-2xl bg-white text-black font-semibold text-sm flex items-center justify-center gap-2 hover:bg-neutral-200 transition-colors"
+                      className="w-full py-4 rounded-2xl bg-white text-black font-semibold text-sm flex items-center justify-center gap-2 hover:bg-neutral-200 transition-colors shadow-2xl"
                     >
                       <ShieldCheck size={18} />
                       <span>Authorize & Send €{parsedAmount.toFixed(2).replace('.', ',')}</span>
@@ -636,7 +636,7 @@ export const SendMoneyModal: React.FC = () => {
                         onClick={() => {
                           showToast('Receipt copied to clipboard', 'info');
                         }}
-                        className="py-3 rounded-2xl bg-[#1c1c1e] text-xs font-medium text-white hover:bg-[#2c2c2e] flex items-center justify-center gap-1.5"
+                        className="py-3 rounded-2xl bg-white/[0.08] backdrop-blur-xl border border-white/15 text-xs font-medium text-white hover:bg-white/[0.15] flex items-center justify-center gap-1.5 transition-all"
                       >
                         <Share2 size={14} />
                         <span>Share Receipt</span>
@@ -647,7 +647,7 @@ export const SendMoneyModal: React.FC = () => {
                           setAmountStr('0');
                           setStep('amount');
                         }}
-                        className="py-3 rounded-2xl bg-[#1c1c1e] text-xs font-medium text-white hover:bg-[#2c2c2e] flex items-center justify-center gap-1.5"
+                        className="py-3 rounded-2xl bg-white/[0.08] backdrop-blur-xl border border-white/15 text-xs font-medium text-white hover:bg-white/[0.15] flex items-center justify-center gap-1.5 transition-all"
                       >
                         <Repeat size={14} />
                         <span>Send Again</span>
