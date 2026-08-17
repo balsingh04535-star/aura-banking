@@ -8,10 +8,10 @@ import {
   AlertTriangle,
   ChevronDown,
   Check,
-  Smartphone,
 } from 'lucide-react';
+import { BrandIcon } from '../common/BrandIcon';
 import { useBanking } from '../../store/BankingContext';
-import { formatCurrency, formatIBAN } from '../../utils/formatters';
+import { formatIBAN } from '../../utils/formatters';
 import { triggerHaptic } from '../../hooks/useHaptic';
 
 export const HomeScreen: React.FC = () => {
@@ -232,7 +232,7 @@ export const HomeScreen: React.FC = () => {
         </div>
       )}
 
-      {/* 4. RECENT TRANSACTIONS CONTAINER */}
+      {/* 4. RECENT TRANSACTIONS CONTAINER WITH VECTOR BRAND ICONS */}
       <div className="rounded-[24px] bg-[#1c1c1e] p-4 space-y-3">
         <div className="px-1 text-xs font-bold uppercase tracking-wider text-[#8e8e93]">
           Recent Activity
@@ -240,9 +240,6 @@ export const HomeScreen: React.FC = () => {
 
         <div className="divide-y divide-white/5">
           {filteredTransactions.slice(0, 6).map((tx) => {
-            const isHostinger = tx.title.toLowerCase().includes('hostinger');
-            const isApple = tx.title.toLowerCase().includes('apple');
-
             return (
               <div
                 key={tx.id}
@@ -252,20 +249,9 @@ export const HomeScreen: React.FC = () => {
                 }}
                 className="py-3.5 flex items-center justify-between cursor-pointer hover:bg-white/5 rounded-2xl px-2 transition-colors"
               >
-                {/* Left Icon & Details */}
+                {/* Left: Vector Brand Icon & Details */}
                 <div className="flex items-center gap-3 min-w-0">
-                  {/* Brand Icon or Category Badge */}
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
-                      isHostinger
-                        ? 'bg-[#673de6] text-white'
-                        : isApple
-                        ? 'bg-[#2c2c2e] text-white'
-                        : 'bg-[#2c2c2e] text-white'
-                    }`}
-                  >
-                    {isHostinger ? 'H' : isApple ? '🍎' : tx.title.charAt(0)}
-                  </div>
+                  <BrandIcon title={tx.title} category={tx.category} />
 
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-white truncate">
@@ -285,7 +271,7 @@ export const HomeScreen: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Right Amount */}
+                {/* Right: Amount */}
                 <div className="text-right shrink-0 ml-3">
                   <div className="text-xs font-semibold text-white tnum">
                     {tx.amount < 0 ? '-' : '+'}€{Math.abs(tx.amount).toFixed(2).replace('.', ',')}

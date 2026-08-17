@@ -1,56 +1,13 @@
 import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import {
   Search,
   SlidersHorizontal,
-  ArrowUpRight,
-  ArrowDownLeft,
-  ShoppingBag,
-  Car,
-  Utensils,
-  Laptop,
-  Briefcase,
-  Music,
-  Home as HomeIcon,
-  Zap,
-  Plane,
-  HeartPulse,
-  Repeat,
 } from 'lucide-react';
+import { BrandIcon } from '../common/BrandIcon';
 import { useBanking } from '../../store/BankingContext';
-import { Transaction, TransactionCategory } from '../../types/banking';
+import { Transaction } from '../../types/banking';
 import { formatCurrency, formatDateGroup } from '../../utils/formatters';
 import { triggerHaptic } from '../../hooks/useHaptic';
-
-const getCategoryIcon = (category: TransactionCategory) => {
-  switch (category) {
-    case 'Salary':
-      return Briefcase;
-    case 'Technology':
-      return Laptop;
-    case 'Entertainment':
-    case 'Subscriptions':
-      return Music;
-    case 'Transport':
-      return Car;
-    case 'Groceries':
-    case 'Shopping':
-      return ShoppingBag;
-    case 'Restaurants':
-      return Utensils;
-    case 'Housing':
-      return HomeIcon;
-    case 'Utilities':
-      return Zap;
-    case 'Travel':
-      return Plane;
-    case 'Health':
-      return HeartPulse;
-    case 'Transfer':
-    default:
-      return Repeat;
-  }
-};
 
 export const TransactionList: React.FC = () => {
   const {
@@ -157,7 +114,6 @@ export const TransactionList: React.FC = () => {
               {/* Transactions in Group */}
               <div className="bg-[#141618] rounded-2xl overflow-hidden border border-white/10 divide-y divide-white/5">
                 {items.map((tx) => {
-                  const Icon = getCategoryIcon(tx.category);
                   const isIncoming = tx.amount > 0;
 
                   return (
@@ -166,11 +122,9 @@ export const TransactionList: React.FC = () => {
                       onClick={() => handleTransactionClick(tx)}
                       className="p-3.5 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors"
                     >
-                      {/* Left: Icon & Details */}
+                      {/* Left: Brand Icon & Details */}
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-[#1D2024] border border-white/5 flex items-center justify-center text-white/80 shrink-0">
-                          <Icon size={16} strokeWidth={1.75} />
-                        </div>
+                        <BrandIcon title={tx.title} category={tx.category} />
 
                         <div className="min-w-0">
                           <p className="text-xs font-medium text-white truncate">
